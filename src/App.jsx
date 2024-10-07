@@ -1,10 +1,11 @@
-import React from 'react';
-import AppRouter from './Router';
+// App.jsx
+import React from "react";
+import AppRouter from "./Router"; // Ensure to import your AppRouter
 
 const App = () => {
     return (
-        <div className="App">
-            <AppRouter />
+        <div>
+            <AppRouter /> {/* Use AppRouter here */}
         </div>
     );
 };

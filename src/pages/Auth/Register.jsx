@@ -1,73 +1,82 @@
-import { useRef, useState } from "react";
-import { cn } from "@/lib/utils"; 
-import { Link } from "react-router-dom"; 
-import { Eye, EyeOff } from "lucide-react"; 
-import { validateRegister } from "../../utils/validation"; 
-import axios from "axios";
+
+import React, { useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
+import { validateRegister } from "../../utils/validation";
+import PopUpSuccess from './components/PopUpSeccess';
+import PopUpFailed from './components/PopUpFailed';
+import { sendData } from "../../hooks/sendData";
 
 function Register() {
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const usernameRef = useRef();
-  const roleRef = useRef();
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({ roles: [] });
-  const [success, setSuccess] = useState(false);
-  const[notSuccess, setNotSuccess] = useState(false);
-  const [backendError,setBackendError]=useState(false);
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
-  };
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showFailedPopup, setShowFailedPopup] = useState(false);
+  const [backendError, setBackendError] = useState("");
 
-  const sendData = async () => { 
-    setIsLoading(true);
-    try {
-       await axios.post("http://localhost:3500/register", formData);
+  const usernameRef = useRef();
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const roleRef = useRef();
 
-      setSuccess(true);
-      clearForm();
-    } catch (error) {
-      console.error( error.response.data.error); 
-      // set error come from backend
-      setBackendError(error.response.data.error)
-      
-      setNotSuccess(true); 
-      handleErrors(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // user navigate to login page
+  const navigate = useNavigate();
 
-  const handleErrors = (error) => {
-    const message = error.response?.data?.message || "Registration failed";
-    setErrors({ submit: message });
-  };
+  const togglePasswordVisibility = () => setShowPassword(prev => !prev);
 
   const clearForm = () => {
-    usernameRef.current.value = '';
-    emailRef.current.value = '';
-    passwordRef.current.value = '';
-    roleRef.current.value = '';
+    [usernameRef, emailRef, passwordRef, roleRef].forEach(ref => ref.current.value = '');
     setErrors({});
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const username = usernameRef.current.value;
-    const email = emailRef.current.value;
-    const password = passwordRef.current.value;
-    const selectedRole = roleRef.current.value;
 
-    const { isValid, errors: validationErrors } = validateRegister(username, email, password, selectedRole);
+    const formData = {
+      username: usernameRef.current.value,
+      email: emailRef.current.value,
+      password: passwordRef.current.value,
+      roles: [roleRef.current.value]
+    };
+
+    const { isValid, errors: validationErrors } = validateRegister(formData);
+
     if (!isValid) {
       setErrors(validationErrors);
       return;
     }
 
-    setFormData({ username, email, password, roles: [selectedRole] });
-    sendData();   
+    setIsLoading(true);
+
+    try {
+      const response = await sendData("http://localhost:3500/register", formData);
+      if (response.status === 201) {
+        clearForm();
+        setShowSuccessPopup(true);
+       
+        
+      } else {
+        setBackendError("Unexpected error occurred.");
+        setShowFailedPopup(true);
+      }
+    } catch (error) {
+      // Handle error from the backend
+      if (error.response?.status === 400) {
+        // Check if it's a 'Username or email already exists' error
+        if (error.response.data?.error === 'Username or email already exists') {
+          setBackendError('Username or email already exists. Please choose another.');
+        } else {
+          // Set any other backend error message
+          setBackendError(error.response?.data?.message || 'Something went wrong.');
+        }
+      } else {
+        setBackendError('Something went wrong.');
+      }
+      setShowFailedPopup(true);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -92,29 +101,51 @@ function Register() {
             <h1 className="text-2xl font-semibold tracking-tight">Register</h1>
             <p className="text-sm text-muted-foreground">Enter your email & password</p>
           </div>
-          <form onSubmit={handleSubmit} className={cn("grid gap-6")}>
+          <form onSubmit={handleSubmit} className="grid gap-6">
             <div className="flex flex-col gap-4">
-              <input type="text" className={`border p-2 rounded-md ${errors.username ? "border-red-500" : ""}`} placeholder="Username" ref={usernameRef} required />
+              <input
+                type="text"
+                className={`border p-2 rounded-md ${errors.username ? "border-red-500" : ""}`}
+                placeholder="Username"
+                ref={usernameRef}
+                required
+              />
               {errors.username && <p className="text-red-500">{errors.username}</p>}
-              
-              <input type="email" className={`border p-2 rounded-md ${errors.email ? "border-red-500" : ""}`} placeholder="Email" ref={emailRef} required />
+
+              <input
+                type="email"
+                className={`border p-2 rounded-md ${errors.email ? "border-red-500" : ""}`}
+                placeholder="Email"
+                ref={emailRef}
+                required
+              />
               {errors.email && <p className="text-red-500">{errors.email}</p>}
 
               <div className="relative">
-                <input type={showPassword ? "text" : "password"} className={`border p-2 rounded-md w-full ${errors.password ? "border-red-500" : ""}`} placeholder="Password" ref={passwordRef} required />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className={`border p-2 rounded-md w-full ${errors.password ? "border-red-500" : ""}`}
+                  placeholder="Password"
+                  ref={passwordRef}
+                  required
+                />
                 <button type="button" className="absolute right-2 top-2" onClick={togglePasswordVisibility}>
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
               {errors.password && <p className="text-red-500">{errors.password}</p>}
 
-              <select className={`border border-gray-300 p-2 rounded-md w-full ${errors.role ? "border-red-500" : ""}`} ref={roleRef} required>
+              <select
+                className={`border border-gray-300 p-2 rounded-md w-full ${errors.roles ? "border-red-500" : ""}`}
+                ref={roleRef}
+                required
+              >
                 <option value="">Select Role</option>
                 <option value="Manager">Manager</option>
                 <option value="Client">Client</option>
                 <option value="Livreur">Livreur</option>
               </select>
-              {errors.role && <p className="text-red-500">{errors.role}</p>}
+              {errors.roles && <p className="text-red-500">{errors.roles}</p>}
             </div>
 
             {errors.submit && <p className="text-red-500">{errors.submit}</p>}
@@ -125,41 +156,24 @@ function Register() {
           </form>
           <p className="px-8 text-center text-sm text-muted-foreground">
             By clicking continue, you agree to our{" "}
-            <Link to="/terms" className="underline hover:text-primary">Terms of Service</Link>{" "} and{" "}
+            <Link to="/terms" className="underline hover:text-primary">Terms of Service</Link> and{" "}
             <Link to="/privacy" className="underline hover:text-primary">Privacy Policy</Link>.
           </p>
         </div>
       </div>
 
-      {success && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
-          <div className="bg-white p-4 rounded-md">
-            <h2 className="text-lg font-semibold">Registration Successful!</h2>
-            <p className="mt-2">You have registered successfully. Please check your email for verification.</p>
-            <button onClick={() => setSuccess(false)} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md">Close</button>
-          </div>
-        </div>
-      )}
+      {/* Show the success popup */}
+      <PopUpSuccess show={showSuccessPopup} onClose={() => {
+        setShowSuccessPopup(false) 
+        navigate('/login')
+      }
+    
+      } />
       
-      {notSuccess && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
-          <div className="bg-white p-4 rounded-md">
-            <h2 className="text-lg font-semibold">Registration Failed!</h2>
-            <p className="mt-2">{backendError}.</p>
-            <button onClick={() => setNotSuccess(false)} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md">Close</button>
-          </div>
-        </div>
-      )}
+      {/* Show the failure popup with backend error message */}
+      <PopUpFailed show={showFailedPopup} error={backendError} onClose={() => setShowFailedPopup(false)} />
     </div>
   );
 }
 
 export default Register;
-
-
-
-
-
-
-
-
