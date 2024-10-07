@@ -67,7 +67,7 @@ function ResetPassword() {
       if (response.status === 200) {
         setSuccess(true);
         clearForm();
-        setTimeout(() => navigate("/login"), 2000); // Redirect after 2 seconds
+        setTimeout(() => navigate("/login"), 2000); 
       } else {
         throw new Error('Password reset failed');
       }
@@ -98,7 +98,7 @@ function ResetPassword() {
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <div className="flex flex-col space-y-2 text-center">
             <h1 className="text-2xl font-semibold tracking-tight">Change password</h1>
-            <p className="text-sm text-muted-foreground">Enter the new password</p>
+            <p className="text-sm text-muted-foreground"> Please enter the new password</p>
           </div>
 
           <form onSubmit={handleSubmit} className="grid gap-6">
@@ -179,5 +179,4 @@ function ResetPassword() {
     </div>
   );
 }
-
 export default ResetPassword;

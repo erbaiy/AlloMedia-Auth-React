@@ -8,10 +8,6 @@ function ForgetPassword() {
     const emailRef=useRef();
     const [isLoading, setIsLoading] = useState(false);
 
-
-
-
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         const email = emailRef.current.value;
@@ -35,8 +31,7 @@ function ForgetPassword() {
         } finally {
           setIsLoading(false);
         }
-        
-            
+  
     }
     return (
              <div className="container relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
@@ -54,8 +49,8 @@ function ForgetPassword() {
       <div className="lg:p-8 pt-44 m-[30px]">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <div className="flex flex-col space-y-2 text-center">
-            <h1 className="text-2xl font-semibold tracking-tight">forget-password</h1>
-            <p className="text-sm text-muted-foreground">Enter your email </p>
+            <h1 className="text-2xl font-semibold tracking-tight">Forget password</h1>
+            <p className="text-sm text-muted-foreground"> Please enter your email </p>
           </div>
           <form onSubmit={handleSubmit} className={cn("grid gap-6")}>
             <div className="flex flex-col gap-4">
@@ -85,5 +80,4 @@ function ForgetPassword() {
     </div>
     );
 }
-
 export default ForgetPassword;
