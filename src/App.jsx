@@ -18,8 +18,7 @@
 
 
 
-import React from "react";
-import AppRouter from "./Router"; // Import your AppRouter
+import AppRouter from "./Router"; 
 import { AuthProvider } from "./context/context"; // Ensure the AuthProvider is correctly imported
 
 const App = () => {
