@@ -1,6 +1,7 @@
 
 import { useEffect } from "react";
 import axiosInstance from "../../config/axios";
+import Logout from "../Auth/Logout";
 function Home() {
 console.log("hello")
 useEffect(() => {
@@ -20,6 +21,9 @@ useEffect(() => {
     return (
         <div>
             hello in page dashboard
+            
+
+            <Logout/>
         </div>
     );
 }

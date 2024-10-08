@@ -13,3 +13,14 @@ export const  sendData = async (url, data) => {
     }
 };
 
+export const  getData = async (url) => {
+    try {
+        const response = await axiosInstance.get(url);
+        console.log('Data sent:', response);
+        return response;
+    } catch (error) {
+        console.error('Error sending data:', error);
+        throw error;
+    }
+};
+
