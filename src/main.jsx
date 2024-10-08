@@ -7,7 +7,7 @@ import App from './App';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <App /> {/* Your App is wrapped in BrowserRouter */}
+      <App /> 
     </BrowserRouter>
   </StrictMode>,
 );
