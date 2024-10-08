@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { login2FAValidation } from "../../utils/validation";
 import { sendData } from "../../hooks/sendData";
@@ -8,7 +8,8 @@ import { cn } from "@/lib/utils";
 
 function VerifyOtp() {
 
-  
+   
+  const navigate = useNavigate(); // Initialize useNavigate
   const emailRef = useRef();
   const otpRef = useRef();
   const [showOtp, setShowOtp] = useState(false);
@@ -42,7 +43,7 @@ function VerifyOtp() {
     setLoadingState({ ...loadingState, isLoading: true });
 
     try {
-      const response = await sendData("http://localhost:3500/auth/verify-otp", { email, otp });
+      const response = await sendData("/auth/verify-otp", { email, otp });
 
       if (response.status !== 200) {
         setLoadingState({ ...loadingState, backendError: response.data.error, notSuccess: true });
@@ -50,9 +51,12 @@ function VerifyOtp() {
       }
 
       localStorage.setItem("token", response.data.accessToken);
+      setAuthState({ isAuthenticated: true });
+      localStorage.setItem("isAuthenticated", true);
       setLoadingState({ ...loadingState, success: true });
       clearForm();
-      setAuthState({ isAuthenticated: true });
+      navigate("/");
+      
     } catch (error) {
 
       setLoadingState({ ...loadingState, backendError: "An unexpected error occurred", notSuccess: true });

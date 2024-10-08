@@ -50,7 +50,7 @@ function Register() {
     setIsLoading(true);
 
     try {
-      const response = await sendData("http://localhost:3500/register", formData);
+      const response = await sendData("/register", formData);
       if (response.status === 201) {
         clearForm();
         setShowSuccessPopup(true);

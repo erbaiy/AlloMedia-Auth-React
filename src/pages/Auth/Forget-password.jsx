@@ -19,7 +19,7 @@ function ForgetPassword() {
         setErrors({});
         setIsLoading(true);
         try {
-          const response = await sendData("http://localhost:3500/auth/forget-password", { email });
+          const response = await sendData("/auth/forget-password", { email });
           if (response.status === 200) {
             alert("Please check your email to reset your password");
           } else {
