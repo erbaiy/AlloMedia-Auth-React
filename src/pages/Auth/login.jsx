@@ -44,7 +44,8 @@ function Login() {
     setIsLoading(true); // Start loading
 
     try {
-      const response = await sendData("http://localhost:3500/auth", { email, password });
+      const response = await sendData("/auth", { email, password });
+      console.log(email,response)
 
       if (response.status === 200) {
         setSuccess(true);
@@ -57,7 +58,8 @@ function Login() {
     } catch (error) {
       console.error("Login failed:", error);
       setBackendError(error.message || "Login failed");
-      setNotSuccess(true);
+      setErrors({ email: "Invalid email or password", password: "Invalid email or password" });
+            // setNotSuccess(true);
     } finally {
       setIsLoading(false); // Stop loading
     }
