@@ -44,9 +44,10 @@ function VerifyOtp() {
 
     try {
       const response = await sendData("/auth/verify-otp", { email, otp });
+      console.log("here is the response ",response);
 
       if (response.status !== 200) {
-        setLoadingState({ ...loadingState, backendError: response.data.error, notSuccess: true });
+        setLoadingState({ ...loadingState, backendError: 'invalid otp', notSuccess: true });
         return;
       }
 
@@ -149,7 +150,7 @@ function VerifyOtp() {
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
           <div className="bg-white p-4 rounded-md">
             <h2 className="text-lg font-semibold">Login Failed!</h2>
-            <p className="mt-2">{loadingState.backendError}.</p>
+            <p className="mt-2">invalid email or otp:plese VerifyOtp your creadentiel .</p>
             <button onClick={() => setLoadingState((prev) => ({ ...prev, notSuccess: false }))} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md">
               Close
             </button>

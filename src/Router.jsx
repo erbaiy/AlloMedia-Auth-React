@@ -14,6 +14,7 @@ import ForgetPassword from "./pages/Auth/Forget-password";
 import ResetPassword from "./pages/Auth/Reset-password";
 import AuthMiddleware from "./middleware/AuthMiddleware";
 import Home from './pages/Dashboard/Home';
+import VerifyEmail from "./pages/Auth/VerifyEmail";
 
 const AppRouter = () => {
     return (
@@ -23,6 +24,7 @@ const AppRouter = () => {
             <Route path="/verify-otp" element={<VerifyOtp />} />
             <Route path="/forget-password" element={<ForgetPassword />} />
             <Route path="/auth/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/register/verify-email/:token" element={<VerifyEmail />} />
             <Route path="/" element={
           <AuthMiddleware>
             <Home />
