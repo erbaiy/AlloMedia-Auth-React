@@ -3,8 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { newPasswordValidation } from "../../utils/validation";
 import { sendData } from "../../hooks/sendData";
-import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css'; // Import styles
+import toast, { Toaster } from 'react-hot-toast';
+import LefSide from "./components/LefSide";
+
 
 function ResetPassword() {
   const { token } = useParams();
@@ -72,20 +73,13 @@ function ResetPassword() {
   return (
     <div className="container flex flex-col items-center justify-center h-screen md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
      
-
-      {/* Left-side branding panel */}
-      <div className="relative hidden h-full flex-col bg-gradient-to-b from-gray-900 to-gray-800 text-white lg:flex p-10">
-        <div className="absolute inset-0 opacity-50" />
-        <h1 className="relative z-20 text-4xl font-bold">All<span className="text-blue-500">o</span>Media</h1>
-        <blockquote className="relative z-20 mt-auto text-lg">
-          <p>&ldquo;M3a AloMedia Hna kan 3ndk kl 7aga&rdquo;</p>
-        </blockquote>
-      </div>
+     <Toaster position="top-center" reverseOrder={false} />
+      <LefSide/>
 
       {/* Password reset form */}
   
       <div className="lg:p-8 pt-10 md:pt-44 m-[30px] flex items-center justify-center">
-      <ToastContainer />
+    
         <div className="w-full max-w-md space-y-6">
           <div className="text-center">
             <h1 className="text-2xl font-semibold">Change Password</h1>

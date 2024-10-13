@@ -22,7 +22,7 @@ export const validateRegister = ({ username, email, password, roles }) => {
   }
 
   // Validate roles
-  if (!roles || !Array.isArray(roles) || roles.length === 0 || !["Manager", "Client", "Livreur"].includes(roles[0])) {
+  if (!roles || !Array.isArray(roles) || roles.length === 0 || ![ "Client", "Livreur"].includes(roles[0])) {
     errors.roles = "Please select a valid role.";
   }
 

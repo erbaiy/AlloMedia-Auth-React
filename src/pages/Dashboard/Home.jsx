@@ -29,7 +29,7 @@ function Home() {
 
     return (
         <div>
-            <h1>Hello in Page Dashboard</h1>
+            <h1>Hello in Page Dashboard for docker</h1>
             <Logout />
         </div>
     );
