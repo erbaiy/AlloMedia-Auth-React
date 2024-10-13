@@ -1,12 +1,18 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { cn } from "@/lib/utils"; 
 import { validateEmail } from './../../utils/validation';
 import { sendData } from '../../hooks/sendData';
+import toast, { Toaster } from 'react-hot-toast';
 
 function ForgetPassword() {
     const [errors,setErrors]=useState({});
     const emailRef=useRef();
     const [isLoading, setIsLoading] = useState(false);
+
+    const clearForm = () => {
+      emailRef.current.value = '';
+      setErrors({});
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -21,20 +27,25 @@ function ForgetPassword() {
         try {
           const response = await sendData("/auth/forget-password", { email });
           if (response.status === 200) {
-            alert("Please check your email to reset your password");
+            toast.success("Please check your email to reset your password");
+             clearForm()
           } else {
             throw new Error("Unexpected error occurred");
           }
         } catch (error) {
           console.error("Forget password failed:", error);
-          setErrors({ email: error.message || "Forget password failed" });
+          
+          toast.error("Forget password failed" );
         } finally {
           setIsLoading(false);
         }
   
     }
     return (
-             <div className="container relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+          
+          <div className="container relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+                 <Toaster position="top-center" reverseOrder={false} />
+
 <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
         <div className="absolute inset-0 bg-zinc-900" />
         <div className="relative z-20 flex items-center text-lg font-medium">

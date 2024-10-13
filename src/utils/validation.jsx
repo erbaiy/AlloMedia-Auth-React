@@ -22,7 +22,7 @@ export const validateRegister = ({ username, email, password, roles }) => {
   }
 
   // Validate roles
-  if (!roles || !Array.isArray(roles) || roles.length === 0 || !["Manager", "Client", "Livreur"].includes(roles[0])) {
+  if (!roles || !Array.isArray(roles) || roles.length === 0 || ![ "Client", "Livreur"].includes(roles[0])) {
     errors.roles = "Please select a valid role.";
   }
 
@@ -113,22 +113,24 @@ export  const  validateEmail=(email)=>{
 
 export const newPasswordValidation = (password, newPassword) => {
   const errors = {};
-  
+
+  // Validate password length
   if (!password || password.length < 6) {
     errors.password = "Password must be at least 6 characters long.";
   }
 
+  // Validate new password length
   if (!newPassword || newPassword.length < 6) {
-    errors.newPassword = "Password must be at least 6 characters long.";
-    if(newPassword != password){
-      errors.newPassword = "New password must be different from old password.";
-    }
+    errors.newPassword = "New password must be at least 6 characters long.";
   }
 
+  // Check if new password matches the original password
+  if (newPassword !== password) {
+    errors.newPasswordMatch = "New password does not match the original password.";
+  }
 
+  // Determine overall validity
+  const isValid = Object.keys(errors).length === 0;
 
-  return {
-    isValid: Object.keys(errors).length === 0,
-    errors,
-  };
+  return { isValid, errors };
 };

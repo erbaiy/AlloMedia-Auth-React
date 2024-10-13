@@ -3,8 +3,8 @@ import { cn } from "@/lib/utils";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import { Eye, EyeOff } from "lucide-react"; 
 import { loginValidation } from "../../utils/validation"; 
-// Importing a named export
 import { sendData } from "../../hooks/sendData";
+import toast, { Toaster } from 'react-hot-toast';
 
 function Login() {
   const emailRef = useRef();
@@ -31,6 +31,7 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    toast.dismiss();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
     
@@ -50,6 +51,7 @@ function Login() {
       if (response.status === 200) {
         setSuccess(true);
         clearForm();
+        toast.success('Login successful! Please verify your your otp.');
         // navigate to  verify 2FA page
         navigate("/verify-otp"); 
       } else {
@@ -57,8 +59,8 @@ function Login() {
       }
     } catch (error) {
       console.error("Login failed:", error);
-      setBackendError(error.message || "Login failed");
-      setErrors({ email: "Invalid email or password", password: "Invalid email or password" });
+      toast.error(error.response.data.message)
+      // setBackendError(error.response.data.message)
             // setNotSuccess(true);
     } finally {
       setIsLoading(false); // Stop loading
@@ -67,6 +69,8 @@ function Login() {
 
   return (
     <div className="container relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+      <Toaster position="top-center" reverseOrder={false} />
+
 <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
         <div className="absolute inset-0 bg-zinc-900" />
         <div className="relative z-20 flex items-center text-lg font-medium">
@@ -122,6 +126,11 @@ function Login() {
               {isLoading ? "Loading..." : "Login"}
             </button>
           </form>
+          <p className="px-8 text-center text-sm text-muted-foreground">
+            Are you forget you're password?, Click here {" "}
+            <Link to="/forget-password" className="underline hover:text-primary">forget-password</Link> .
+            
+          </p>
         </div>
       </div>
 
@@ -154,3 +163,5 @@ function Login() {
 }
 
 export default Login;
+
+
