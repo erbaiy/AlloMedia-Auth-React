@@ -2,6 +2,10 @@
 
 
 
+
+
+
+
 import { Routes, Route } from "react-router-dom"; // Import Routes and Route
 import Register from './pages/Auth/Register';
 import Login from './pages/Auth/Login';
