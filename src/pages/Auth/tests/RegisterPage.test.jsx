@@ -29,6 +29,7 @@ describe("Register Component", () => {
     expect(screen.getByPlaceholderText("Password")).toBeInTheDocument();
     expect(screen.getByText("Register")).toBeInTheDocument();
   });
+});
 
   // test("shows errors when validation fails", async () => {
   //   validateRegister.mockReturnValue({
@@ -153,4 +154,4 @@ describe("Register Component", () => {
   //     expect(submitButton).not.toBeDisabled();
   //   });
   // });
-});
+// });
