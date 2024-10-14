@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getData } from '../../hooks/sendData';
 import LefSide from './components/LefSide';
+import toast, { Toaster } from 'react-hot-toast';
 
 const VerifyEmail = () => {
   const { token } = useParams();
@@ -17,6 +18,8 @@ const VerifyEmail = () => {
       setLoadingState({ ...loadingState, isLoading: true });
        await getData(`/register/verify-email?token=${token}`);
       setLoadingState({ ...loadingState, success: true, isLoading: false });
+      toast.success('');
+
     } catch (error) {
       setLoadingState({
         ...loadingState,
